@@ -184,13 +184,20 @@ npm test          # run once
 npm run test:watch # watch mode
 ```
 
-## What I'd Do With Another Hour
+## Future Improvements (What I'd Do With Another Hour)
 
-- **Improve receipt OCR accuracy** -- pre-process images (contrast, rotation, crop) before OCR to improve parsing on blurry or angled photos
-- **Responsive desktop layout** -- side-by-side items + summary view on wider screens
-- **Share via link** -- encode bill state in a URL so you can text the split to friends
-- **Venmo/payment deep links** -- one-tap "request $X from Alice" that opens Venmo
+I spent roughly 35-40 minutes on this project. Here's where I'd take it next:
 
-## AI Tools Used
+- **Persistence / backend layer** -- Add a simple SQL backend with `bill_id` and `user_id` so users can save, retrieve, and view their bill history over time. A lightweight schema (`users`, `bills`, `bill_items`, `bill_assignments`) would be enough to make bills durable beyond a single browser session.
+- **Pay with Venmo** -- Users register with their Venmo handle during the "Add People" step. Once the summary is calculated, each person gets a one-tap "Pay with Venmo" button that opens the Venmo app pre-filled with the exact amount owed and the payee. After payment, the user is automatically disconnected from the bill (marked as settled).
+- **Improve receipt OCR accuracy** -- Pre-process images (contrast enhancement, rotation correction, crop) before OCR to improve parsing on blurry or angled photos.
+- **Responsive desktop layout** -- Side-by-side items + summary view on wider screens.
+- **Share via link** -- Encode bill state in a URL so you can text the split to friends.
 
-- **Claude Code (Claude Opus)** -- all code was generated through conversation with Claude Code. Used for scaffolding, component implementation, state management, receipt parser logic, unit tests, and iterative refinement based on testing real receipts.
+## AI Tool Usage
+
+Built entirely using **Claude Code (Opus 4.6)**.
+
+I drove the high-level decisions -- product flow, tech architecture, data model design, extensibility (e.g., adding currency support without touching core logic, adding receipt scanning as a separate item entry mode that reuses the existing bill state), and defining test scenarios against real receipts. Claude handled the implementation: scaffolding, component code, state management, receipt parser logic, unit tests, and iterative fixes based on my testing and feedback.
+
+The workflow was iterative and conversational: I'd define or amend specs first, Claude would implement against the updated specs, I'd review the code, run tests, and test in the browser, then flag issues (e.g., OCR misreading prices, tax not auto-populating). We'd update the specs to reflect what we learned, and then Claude would iterate until it worked. Specs and code stayed in sync throughout.
